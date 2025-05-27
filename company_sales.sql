@@ -271,95 +271,91 @@ VALUES (
 SELECT * FROM company.employees;
 
 -- 2. Select the first names of all employees.
-SELECT firstname FROM company.employees;
+SELECT e.firstname FROM company.employees e;
 
 -- 3. Select distinct departments from the Employees table.
-SELECT DISTINCT (department) FROM company.employees;
+SELECT DISTINCT(e.department) FROM company.employees e;
 
 -- 4. Select the total number of employees.
 SELECT COUNT(*) FROM company.employees;
 
 -- 5. Select the total salary paid to all employees.
-SELECT SUM(salary) FROM company.employees;
+SELECT SUM(e.salary) FROM company.employees e;
 
 -- 6. Select the average salary of all employees.
-SELECT AVG(salary) FROM company.employees;
+SELECT AVG(e.salary) FROM company.employees e;
 
 -- 7. Select the highest salary in the Employees table.
-SELECT MAX(salary) FROM company.employees;
+SELECT MAX(e.salary) FROM company.employees e;
 
 -- 8. Select the lowest salary in the Employees table.
-SELECT MIN(salary) FROM company.employees;
+SELECT MIN(e.salary) FROM company.employees e;
 
 -- 9. Select the total number of male employees.
-SELECT COUNT(*) FROM company.employees WHERE gender = 'Male';
+SELECT COUNT(*) FROM company.employees e WHERE e.gender = 'Male';
 
 -- 10. Select the total number of female employees.
-SELECT COUNT(*) FROM company.employees WHERE gender = 'Female';
+SELECT COUNT(*) FROM company.employees e WHERE e.gender = 'Female';
 
 -- 11. Select the total number of employees hired in the year 2020.
 SELECT COUNT(*)
-FROM company.employees
-WHERE
-    EXTRACT(
-        YEAR
-        FROM s.saledate
-    ) = 2021;
+FROM company.employees e
+WHERE e.hiredate BETWEEN '2020-01-01' AND '2020-12-31'
 
 -- 12. Select the average salary of employees in the 'IT' department.
-SELECT AVG(salary) FROM company.employees WHERE department = 'IT';
+SELECT AVG(e.salary) FROM company.employees e WHERE e.department = 'IT';
 
 -- 13. Select the number of employees in each department.
-SELECT COUNT(*) AS no_of_employees, department
-FROM company.employees
+SELECT COUNT(*) AS no_of_employees, e.department
+FROM company.employees e
 GROUP BY
-    department;
+    e.department;
 
 -- 14. Select the total salary paid to employees in each department.
 SELECT
-    SUM(salary) as total_per_department,
-    department
-FROM company.employees
+    SUM(e.salary) as total_per_department,
+    e.department
+FROM company.employees e
 GROUP BY
-    department;
+    e.salarydepartment;
 
 -- 15. Select the maximum salary in each department.
 SELECT
-    MAX(salary) as highest_per_department,
-    department
-FROM company.employees
+    MAX(e.salary) as highest_per_department,
+    e.department
+FROM company.employees e
 GROUP BY
-    department;
+    e.department;
 
 -- 16. Select the minimum salary in each department.
 SELECT
-    MIN(salary) as lowest_per_department,
-    department
-FROM company.employees
+    MIN(e.salary) as lowest_per_department,
+    e.department
+FROM company.employees e
 GROUP BY
-    department;
+    e.department;
 
 -- 17. Select the total number of employees, grouped by gender.
 SELECT count(*) AS no_of_employees, gender
-FROM company.employees
+FROM company.employees e
 GROUP BY
-    gender;
+    e.gender;
 
 -- 18. Select the average salary of employees, grouped by gender.
-SELECT AVG(salary) AS average_salary, gender
-FROM company.employees
+SELECT AVG(e.salary) AS average_salary, e.gender
+FROM company.employees e
 GROUP BY
-    gender;
+    e.gender;
 
 -- 19. Select the top 5 highest-paid employees.
-SELECT firstname, lastname, salary
-from company.employees
-ORDER BY salary DESC
+SELECT e.firstname, e.lastname, e.salary
+from company.employees e
+ORDER BY e.salary DESC
 LIMIT 5;
 
 -- 20. Select the total number of unique first names in the Employees table.
-SELECT COUNT(DISTINCT (firstname)) as no_of_unique_names
-FROM company.employees;
+SELECT COUNT(DISTINCT (e.firstname)) as no_of_unique_names
+FROM company.employees e;
 
 -- 21. Select all employees and their corresponding sales
 SELECT company.employees.employeeld, company.sales.total
@@ -368,19 +364,19 @@ FROM company.sales
 -- GROUP BY company.employees.employeeld, company.sales.saleid, company.employees.firstname;
 
 -- 22. Select the first 10 employees hired, ordered by their HireDate.
-SELECT * FROM company.employees ORDER BY hiredate LIMIT 10;
+SELECT * FROM company.employees e ORDER BY e.hiredate LIMIT 10;
 
 -- 23. Select the employees who have not made any sales.
 SELECT *
-FROM company.employees
+FROM company.employees e
 WHERE
-    company.employees.employeeld NOT IN company.sales.employeeld;
+    e.employeeld NOT IN e.employeeld;
 
 -- 24. Select the total number of sales made by each employee.
-SELECT SUM(total) as total_sales, employeeld
-FROM company.sales
+SELECT SUM(s.total) as total_sales, s.employeeld
+FROM company.sales s
 GROUP BY
-    employeeld;
+    s.employeeld;
 -- 25. Select the employee who made the highest total sales.
 SELECT e.firstname, e.lastname, SUM(s.total) AS total_sales
 FROM company.sales s
